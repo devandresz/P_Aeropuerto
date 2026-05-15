@@ -41,9 +41,10 @@
                 </asp:Panel>
 
                 <div class="role-switch" role="tablist" aria-label="Tipo de acceso">
-                    <input type="radio" id="roleClient" name="role" checked="checked" />
+                    <input type="hidden" id="selectedRole" name="selectedRole" value="Cliente" />
+                    <input type="radio" id="roleClient" name="role" value="Cliente" checked="checked" />
                     <label for="roleClient">Cliente</label>
-                    <input type="radio" id="roleAdmin" name="role" />
+                    <input type="radio" id="roleAdmin" name="role" value="Administrador" />
                     <label for="roleAdmin">Administrador</label>
 
                     <div class="role-panel client-panel">
@@ -95,5 +96,21 @@
             </section>
         </section>
     </main>
+
+    <script>
+        (function () {
+            var selectedRole = document.getElementById("selectedRole");
+            var roleClient = document.getElementById("roleClient");
+            var roleAdmin = document.getElementById("roleAdmin");
+
+            function syncRole() {
+                selectedRole.value = roleAdmin.checked ? "Administrador" : "Cliente";
+            }
+
+            roleClient.addEventListener("change", syncRole);
+            roleAdmin.addEventListener("change", syncRole);
+            syncRole();
+        }());
+    </script>
 
 </asp:Content>

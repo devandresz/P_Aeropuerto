@@ -33,6 +33,22 @@ namespace app.Auth
 
         protected async void btnClientLogin_Click(object sender, EventArgs e)
         {
+            if (IsAdminLoginRequest())
+            {
+                await LoginAsAdminAsync();
+                return;
+            }
+
+            await LoginAsClientAsync();
+        }
+
+        protected async void btnAdminLogin_Click(object sender, EventArgs e)
+        {
+            await LoginAsAdminAsync();
+        }
+
+        private async Task LoginAsClientAsync()
+        {
             if (IsLoginBypassEnabled())
             {
                 RedirectToMainDashboard("Cliente", txtClientEmail.Text.Trim());
@@ -55,7 +71,7 @@ namespace app.Auth
             await TryLoginAsync(request, "Cliente");
         }
 
-        protected async void btnAdminLogin_Click(object sender, EventArgs e)
+        private async Task LoginAsAdminAsync()
         {
             if (IsLoginBypassEnabled())
             {
@@ -77,6 +93,12 @@ namespace app.Auth
             };
 
             await TryLoginAsync(request, "Administrador");
+        }
+
+        private bool IsAdminLoginRequest()
+        {
+            return string.Equals(Request.Form["selectedRole"], "Administrador", StringComparison.OrdinalIgnoreCase)
+                || Request.Form[btnAdminLogin.UniqueID] != null;
         }
 
         private async Task TryLoginAsync(LoginRequest request, string expectedRole)
