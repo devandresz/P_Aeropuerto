@@ -1,0 +1,30 @@
+@model ModuleDashboardViewModel
+@{
+    ViewData["Title"] = "Modulos";
+}
+
+<main class="ops-page">
+    <section class="ops-shell">
+        <div class="ops-hero">
+            <div>
+                <span class="eyebrow">@(Model.IsAdmin ? "Centro operativo" : "Mi informacion")</span>
+                <h1>Modulos aeroportuarios</h1>
+                <p>@(Model.IsAdmin ? "Acceso a las tablas operativas definidas en el esquema AER_*." : "Acceso a vuelos, equipaje, reservas, migracion, facturas y objetos perdidos ligados a tu usuario.")</p>
+            </div>
+            <div class="ops-actions">
+                <a class="ops-button secondary" asp-controller="Auth" asp-action="Logout">Cerrar sesion</a>
+                <a class="ops-button" asp-controller="Modules" asp-action="Vuelos">Ver vuelos</a>
+            </div>
+        </div>
+        <div class="module-grid">
+            @foreach (var card in Model.Cards)
+            {
+                <a class="module-card" asp-controller="@card.Controller" asp-action="@card.Action">
+                    <span>@card.Area</span>
+                    <strong>@card.Title</strong>
+                    <p>@card.Description</p>
+                </a>
+            }
+        </div>
+    </section>
+</main>

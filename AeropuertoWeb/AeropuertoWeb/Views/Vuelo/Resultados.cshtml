@@ -1,0 +1,46 @@
+@model System.Data.DataTable
+@{
+    ViewData["Title"] = "Resultados de vuelos";
+}
+
+<main class="ops-page">
+    <section class="ops-shell">
+        <div class="ops-hero">
+            <div>
+                <span class="eyebrow">Busqueda</span>
+                <h1>Resultados de vuelos</h1>
+                <p>Resultados temporales devueltos por /Vuelo/TEMP_BuscarVuelo.</p>
+            </div>
+            <div class="ops-actions">
+                <a class="ops-button secondary" asp-controller="Modules" asp-action="Vuelos">Volver a vuelos</a>
+            </div>
+        </div>
+        <section class="ops-panel">
+            <div class="ops-table-wrap">
+                <table class="ops-table">
+                    <thead>
+                        <tr>
+                            @foreach (System.Data.DataColumn column in Model.Columns)
+                            {
+                                <th>@column.ColumnName</th>
+                            }
+                            <th>Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.Rows)
+                        {
+                            <tr>
+                                @foreach (var item in row.ItemArray)
+                                {
+                                    <td>@item</td>
+                                }
+                                <td><a class="ops-button" asp-controller="Modules" asp-action="Vuelos" asp-fragment="vueloForm">Comprar</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </section>
+</main>

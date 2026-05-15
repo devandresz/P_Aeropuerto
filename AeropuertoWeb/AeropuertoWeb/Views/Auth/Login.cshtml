@@ -1,0 +1,93 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Acceso";
+}
+
+<main class="login-page">
+    <section class="login-hero" aria-labelledby="loginTitle">
+        <div class="login-copy">
+            <span class="eyebrow">Sistema aeroportuario</span>
+            <h1 id="loginTitle">Bienvenido a AeroPortal</h1>
+            <p>Accede como cliente para consultar tus vuelos y servicios, o como administrador para gestionar operaciones internas.</p>
+            <div class="trust-strip" aria-label="Beneficios de acceso">
+                <div><strong>24/7</strong><span>Disponibilidad</span></div>
+                <div><strong>2 perfiles</strong><span>Cliente y admin</span></div>
+                <div><strong>Seguro</strong><span>Validacion inicial</span></div>
+            </div>
+        </div>
+
+        <section class="login-card" aria-labelledby="accessTitle">
+            <div class="login-card-header">
+                <span class="login-icon" aria-hidden="true">+</span>
+                <div>
+                    <h2 id="accessTitle">Iniciar sesion</h2>
+                    <p>Elige el tipo de usuario para continuar.</p>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Message))
+            {
+                <div class="login-alert" role="alert">@Model.Message</div>
+            }
+
+            <form asp-controller="Auth" asp-action="Login" method="post">
+                @Html.AntiForgeryToken()
+                <div class="role-switch" role="tablist" aria-label="Tipo de acceso">
+                    <input type="hidden" id="selectedRole" asp-for="SelectedRole" />
+                    <input type="radio" id="roleClient" name="role" value="Cliente" checked="checked" />
+                    <label for="roleClient">Cliente</label>
+                    <input type="radio" id="roleAdmin" name="role" value="Administrador" />
+                    <label for="roleAdmin">Administrador</label>
+
+                    <div class="role-panel client-panel">
+                        <div class="field-group">
+                            <label asp-for="ClientEmail">Correo electronico</label>
+                            <input asp-for="ClientEmail" class="form-control login-input" type="email" placeholder="cliente@correo.com" />
+                        </div>
+                        <div class="field-group">
+                            <label asp-for="ClientPassword">Contrasena</label>
+                            <input asp-for="ClientPassword" class="form-control login-input" type="password" placeholder="Tu contrasena" />
+                        </div>
+                        <div class="form-row-options">
+                            <label class="check-option"><input type="checkbox" /> Recordarme</label>
+                            <a href="#">Recuperar acceso</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary login-button" name="SelectedRole" value="Cliente">Entrar como cliente</button>
+                    </div>
+
+                    <div class="role-panel admin-panel">
+                        <div class="field-group">
+                            <label asp-for="AdminUser">Usuario administrativo</label>
+                            <input asp-for="AdminUser" class="form-control login-input" placeholder="admin.usuario" />
+                        </div>
+                        <div class="field-group">
+                            <label asp-for="AdminPassword">Contrasena</label>
+                            <input asp-for="AdminPassword" class="form-control login-input" type="password" placeholder="Contrasena administrativa" />
+                        </div>
+                        <div class="field-group">
+                            <label asp-for="AdminCode">Codigo de seguridad</label>
+                            <input asp-for="AdminCode" class="form-control login-input" placeholder="Codigo interno" />
+                        </div>
+                        <button type="submit" class="btn btn-primary login-button admin-button" name="SelectedRole" value="Administrador">Entrar como administrador</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </section>
+</main>
+
+@section Scripts {
+    <script>
+        (function () {
+            var selectedRole = document.getElementById("selectedRole");
+            var roleClient = document.getElementById("roleClient");
+            var roleAdmin = document.getElementById("roleAdmin");
+            function syncRole() {
+                selectedRole.value = roleAdmin.checked ? "Administrador" : "Cliente";
+            }
+            roleClient.addEventListener("change", syncRole);
+            roleAdmin.addEventListener("change", syncRole);
+            syncRole();
+        }());
+    </script>
+}

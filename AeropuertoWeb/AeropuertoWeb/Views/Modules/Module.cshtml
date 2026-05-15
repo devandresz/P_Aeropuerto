@@ -1,0 +1,136 @@
+@model ModulePageViewModel
+@{
+    ViewData["Title"] = Model.Title;
+    var form = Model.IsAdmin ? Model.AdminForm : Model.ClientForm;
+}
+
+<main class="ops-page">
+    <section class="ops-shell">
+        <div class="ops-hero">
+            <div>
+                <span class="eyebrow">@Model.Eyebrow</span>
+                <h1>@Model.Title</h1>
+                <p>@Model.Description</p>
+            </div>
+            <div class="ops-actions">
+                <a class="ops-button secondary" asp-controller="Modules" asp-action="Dashboard">Modulos</a>
+                @if (form != null)
+                {
+                    <a class="ops-button" href="#@form.Anchor">@form.ButtonText</a>
+                }
+            </div>
+        </div>
+
+        <div class="ops-metrics">
+            @foreach (var metric in Model.Metrics)
+            {
+                <div class="ops-metric"><span>@metric.Label</span><strong>@metric.Value</strong></div>
+            }
+        </div>
+
+        <section class="ops-panel">
+            @if (!string.IsNullOrWhiteSpace(Model.SearchAction))
+            {
+                <form method="post" action="@Model.SearchAction">
+                    <div class="ops-toolbar">
+                        @foreach (var filter in Model.Filters)
+                        {
+                            <div class="ops-field">
+                                <label>@filter.Label</label>
+                                <input class="ops-input" name="@filter.Name" type="@filter.Type" placeholder="@filter.Placeholder" value="@filter.Value" />
+                            </div>
+                        }
+                        <div class="ops-field">
+                            <label>Accion</label>
+                            <button type="submit" class="ops-button">Buscar vuelo</button>
+                        </div>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <div class="ops-toolbar">
+                    @foreach (var filter in Model.Filters)
+                    {
+                        <div class="ops-field">
+                            <label>@filter.Label</label>
+                            @if (filter.ReadOnly)
+                            {
+                                <input class="ops-input" name="@filter.Name" type="@filter.Type" placeholder="@filter.Placeholder" value="@filter.Value" readonly />
+                            }
+                            else
+                            {
+                                <input class="ops-input" name="@filter.Name" type="@filter.Type" placeholder="@filter.Placeholder" value="@filter.Value" />
+                            }
+                        </div>
+                    }
+                </div>
+            }
+            <div class="ops-table-wrap">
+                <table class="ops-table">
+                    <thead>
+                        <tr>
+                            @foreach (var header in Model.Headers)
+                            {
+                                <th>@header</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Rows)
+                        {
+                            <tr>
+                                @foreach (var cell in row)
+                                {
+                                    <td>
+                                        @if (cell.Status != null)
+                                        {
+                                            <span class="status-pill @cell.Status">@cell.Text</span>
+                                        }
+                                        else
+                                        {
+                                            @cell.Text
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        @if (form != null)
+        {
+            <section id="@form.Anchor" class="ops-panel ops-form-panel">
+                <form method="post" action="@(form.Action ?? "#")">
+                    <h2>@form.Title</h2>
+                    <p>@form.Description</p>
+                    <div class="ops-form-grid">
+                        @foreach (var field in form.Fields)
+                        {
+                            <div class="ops-field @field.SpanClass">
+                                <label>@field.Label</label>
+                                @if (field.ReadOnly)
+                                {
+                                    <input class="ops-input" name="@field.Name" type="@field.Type" placeholder="@field.Placeholder" value="@field.Value" readonly />
+                                }
+                                else
+                                {
+                                    <input class="ops-input" name="@field.Name" type="@field.Type" placeholder="@field.Placeholder" value="@field.Value" />
+                                }
+                                @if (!string.IsNullOrWhiteSpace(field.HelpText))
+                                {
+                                    <span class="ops-help-text">@field.HelpText</span>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="ops-form-actions">
+                        <button type="@(form.Action == null ? "button" : "submit")" class="ops-button">@form.SubmitText</button>
+                    </div>
+                </form>
+            </section>
+        }
+    </section>
+</main>

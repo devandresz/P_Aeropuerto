@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Buscar vuelos";
+}
+
+<main class="ops-page">
+    <section class="ops-shell">
+        <div class="ops-hero">
+            <div>
+                <span class="eyebrow">Vuelo</span>
+                <h1>Buscar vuelos</h1>
+                <p>Formulario temporal conectado al controlador de vuelos.</p>
+            </div>
+        </div>
+        <section class="ops-panel">
+            <form method="post" action="/Vuelo/TEMP_BuscarVuelo">
+                <div class="ops-toolbar">
+                    <div class="ops-field"><label>Origen</label><input class="ops-input" name="origen" placeholder="GUA" /></div>
+                    <div class="ops-field"><label>Destino</label><input class="ops-input" name="destino" placeholder="MAD" /></div>
+                    <div class="ops-field"><label>Accion</label><button type="submit" class="ops-button">Buscar vuelo</button></div>
+                </div>
+            </form>
+        </section>
+    </section>
+</main>
