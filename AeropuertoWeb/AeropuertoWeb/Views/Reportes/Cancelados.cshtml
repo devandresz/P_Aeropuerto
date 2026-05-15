@@ -1,0 +1,56 @@
+﻿@using System.Data
+@model DataTable
+
+@{
+    ViewData["Title"] = "Reporte de Vuelos Cancelados";
+}
+
+<div class="container mt-5">
+    <h2 style="color: #D6192E; font-weight: bold;">IBERIA | Panel de Reportes</h2>
+    <p class="text-muted">Conectado en vivo a la Base de Datos Réplica (Alta Disponibilidad)</p>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-dark text-white">
+            Vuelos Cancelados y Reprogramados
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-striped">
+                <thead style="background-color: #D6192E; color: white;">
+                    <tr>
+                        <th>ID Vuelo</th>
+                        <th>Origen</th>
+                        <th>Destino</th>
+                        <th>Fecha de Salida</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in Model.Rows)
+                        {
+                            <tr>
+                                <td>@row["ID_VUELO"]</td>
+                                <td>@row["ORIGEN"]</td>
+                                <td>@row["DESTINO"]</td>
+                                <td>@row["FECHA_SALIDA"]</td>
+                                <td><span class="badge bg-warning text-dark">@row["ESTADO"]</span></td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No hay vuelos cancelados registrados.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
