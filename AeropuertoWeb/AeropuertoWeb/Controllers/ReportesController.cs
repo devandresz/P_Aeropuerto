@@ -1,46 +1,41 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using AeropuertoWeb.Models;
-using Oracle.ManagedDataAccess.Client;
 using System.Data;
 
 namespace AeropuertoWeb.Controllers
 {
     public class ReportesController : Controller
     {
-        private readonly DatabaseManager _dbManager;
-
-        // Inyectamos el gestor de base de datos que creaste antes
-        public ReportesController(DatabaseManager dbManager)
+        // Pantalla principal del Dashboard de Admin
+        public IActionResult Index()
         {
-            _dbManager = dbManager;
+            return View();
         }
 
-        // Esta es la ruta a la que Kevin accederá: /Reportes/Cancelados
-        public IActionResult Cancelados()
+        // Reporte C: Vuelos programados
+        public IActionResult TEMP_ReporteProgramados()
         {
-            DataTable dtVuelos = new DataTable();
+            DataTable dtTEMP_Programados = new DataTable();
+            dtTEMP_Programados.Columns.Add("VUELO");
+            dtTEMP_Programados.Columns.Add("DESTINO");
+            dtTEMP_Programados.Columns.Add("ESTADO");
 
-            try
-            {
-                // Preparamos los parámetros (igualitos a los de tu PL/SQL)
-                OracleParameter[] parametros = new OracleParameter[]
-                {
-                    new OracleParameter("P_TIPO_REPORTE", OracleDbType.Varchar2) { Value = "DIA" },
-                    new OracleParameter("P_FECHA", OracleDbType.Date) { Value = DateTime.Now },
-                    // Parámetro de salida que recibe la tabla de Oracle
-                    new OracleParameter("P_CURSOR", OracleDbType.RefCursor) { Direction = ParameterDirection.Output }
-                };
-
-                // ¡ATENCIÓN A LA RÚBRICA! Usamos ConsultarReplica (IP .101)
-                dtVuelos = _dbManager.ConsultarReplica("SP_REPORTE_CANCELADOS", parametros);
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error = "Error al conectar con la Réplica: " + ex.Message;
-            }
-
-            // Le mandamos los datos a la vista de Kevin
-            return View(dtVuelos);
+            dtTEMP_Programados.Rows.Add("IB-001", "Madrid", "A TIEMPO");
+            return View("ListaVuelos", dtTEMP_Programados);
         }
+
+        // Reporte E: Aerolíneas Activas
+        public IActionResult TEMP_ReporteAerolineas()
+        {
+            DataTable dtTEMP_Aero = new DataTable();
+            dtTEMP_Aero.Columns.Add("NOMBRE");
+            dtTEMP_Aero.Columns.Add("PAIS");
+            dtTEMP_Aero.Columns.Add("ESTADO");
+
+            dtTEMP_Aero.Rows.Add("IBERIA", "España", "ACTIVA");
+            dtTEMP_Aero.Rows.Add("AVIANCA", "Colombia", "ACTIVA");
+            return View("Aerolineas", dtTEMP_Aero);
+        }
+
+        // TODO: Dejar el espacio para cuando Alex traiga los demás reportes (Arrestos, Objetos perdidos, etc.)
     }
 }
