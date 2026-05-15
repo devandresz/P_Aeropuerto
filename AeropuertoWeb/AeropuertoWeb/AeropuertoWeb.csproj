@@ -10,4 +10,18 @@
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.26.200" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Web Forms vive dentro de Views como frontend modular, pero compila con Views/WebForms.sln. -->
+    <Compile Remove="Views\WebForms\**\*.cs" />
+    <Compile Remove="Views\packages\**\*.cs" />
+    <Content Remove="Views\WebForms\bin\**" />
+    <Content Remove="Views\WebForms\obj\**" />
+    <Content Remove="Views\packages\**" />
+    <EmbeddedResource Remove="Views\WebForms\**" />
+    <EmbeddedResource Remove="Views\packages\**" />
+    <None Remove="Views\WebForms\bin\**" />
+    <None Remove="Views\WebForms\obj\**" />
+    <None Remove="Views\packages\**" />
+  </ItemGroup>
+
 </Project>

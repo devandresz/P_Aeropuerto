@@ -1,4 +1,4 @@
-<%@ Page Title="Acceso" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="app._Default" %>
+<%@ Page Title="Acceso" Language="C#" MasterPageFile="~/Shared/Site.Master" AutoEventWireup="true" Async="true" CodeBehind="Login.aspx.cs" Inherits="app.Auth.Login" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -36,6 +36,10 @@
                     </div>
                 </div>
 
+                <asp:Panel ID="pnlLoginMessage" runat="server" CssClass="login-alert" Visible="false" role="alert">
+                    <asp:Literal ID="litLoginMessage" runat="server" />
+                </asp:Panel>
+
                 <div class="role-switch" role="tablist" aria-label="Tipo de acceso">
                     <input type="radio" id="roleClient" name="role" checked="checked" />
                     <label for="roleClient">Cliente</label>
@@ -63,7 +67,7 @@
                             <a href="#">Recuperar acceso</a>
                         </div>
 
-                        <asp:Button ID="btnClientLogin" runat="server" Text="Entrar como cliente" CssClass="btn btn-primary login-button" ValidationGroup="ClientLogin" />
+                        <asp:Button ID="btnClientLogin" runat="server" Text="Entrar como cliente" CssClass="btn btn-primary login-button" ValidationGroup="ClientLogin" OnClick="btnClientLogin_Click" />
                     </div>
 
                     <div class="role-panel admin-panel">
@@ -85,7 +89,7 @@
                             <asp:RequiredFieldValidator ID="rfvAdminCode" runat="server" ControlToValidate="txtAdminCode" ValidationGroup="AdminLogin" CssClass="validation-message" ErrorMessage="Ingresa el codigo de seguridad." Display="Dynamic" />
                         </div>
 
-                        <asp:Button ID="btnAdminLogin" runat="server" Text="Entrar como administrador" CssClass="btn btn-primary login-button admin-button" ValidationGroup="AdminLogin" />
+                        <asp:Button ID="btnAdminLogin" runat="server" Text="Entrar como administrador" CssClass="btn btn-primary login-button admin-button" ValidationGroup="AdminLogin" OnClick="btnAdminLogin_Click" />
                     </div>
                 </div>
             </section>

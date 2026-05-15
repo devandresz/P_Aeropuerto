@@ -1,4 +1,5 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="app.SiteMaster" %>
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="app.SiteMaster" %>
+<%@ Import Namespace="app.Auth" %>
 
 <!DOCTYPE html>
 
@@ -21,8 +22,6 @@
     <form runat="server">
         <asp:ScriptManager runat="server">
             <Scripts>
-                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
-                <%--Framework Scripts--%>
                 <asp:ScriptReference Name="MsAjaxBundle" />
                 <asp:ScriptReference Name="jquery" />
                 <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
@@ -34,25 +33,35 @@
                 <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
                 <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
                 <asp:ScriptReference Name="WebFormsBundle" />
-                <%--Site Scripts--%>
             </Scripts>
         </asp:ScriptManager>
 
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm airport-navbar">
             <div class="container">
-                <a class="navbar-brand airport-brand" runat="server" href="~/">
+                <a class="navbar-brand airport-brand" runat="server" href="~/Auth/Login.aspx">
                     <span class="brand-mark">A</span>
                     AeroPortal
                 </a>
-                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Alternar navegación" aria-controls="navbarSupportedContent"
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Alternar navegacion" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/">Acceso</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/About">Servicios</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Contact">Soporte</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Auth/Login.aspx">Acceso</a></li>
+                        <% if (Session["UserRole"] != null) { %>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Modules/Dashboard.aspx">Modulos</a></li>
+                        <% } %>
+                        <% if (AuthGuard.IsAdmin(Session)) { %>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Modules/Usuarios/Index.aspx">Usuarios</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Modules/Aerolineas/Index.aspx">Aerolineas</a></li>
+                        <% } %>
+                        <% if (AuthGuard.IsClient(Session)) { %>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Modules/Equipaje/Index.aspx">Mi equipaje</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Modules/Factura/Index.aspx">Mis facturas</a></li>
+                        <% } %>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Info/About.aspx">Servicios</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Info/Contact.aspx">Soporte</a></li>
                     </ul>
                 </div>
             </div>
