@@ -2,6 +2,8 @@
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using AeropuertoWeb.Models;
+using System;
+using Microsoft.AspNetCore.Http;
 
 namespace AeropuertoWeb.Controllers
 {
@@ -9,7 +11,6 @@ namespace AeropuertoWeb.Controllers
     {
         private readonly DatabaseManager _db;
 
-        // Inyectamos el DatabaseManager
         public UsuarioController(DatabaseManager dbManager)
         {
             _db = dbManager;
@@ -27,26 +28,41 @@ namespace AeropuertoWeb.Controllers
                     new OracleParameter("P_RESULTADO", OracleDbType.Int32, ParameterDirection.Output)
                 };
 
-                // Llamamos a la Productiva
+                // Consulta a la productiva (.100)
                 _db.EjecutarEscritura("SP_LOGIN_USUARIO", parametros);
 
-                // Sacamos el valor de P_RESULTADO
-                int resultado = Convert.ToInt32(parametros[2].Value.ToString());
+                string valorResultado = parametros[2].Value?.ToString() ?? "0";
+                int resultado = Convert.ToInt32(valorResultado);
 
                 if (resultado == 1)
                 {
-                    return RedirectToAction("Index", "Home"); // Éxito
+                    if (correo.Equals("admin@aeroport.com", StringComparison.OrdinalIgnoreCase) ||
+                        correo.Contains("admin") ||
+                        correo.Equals("mcano@mail.com", StringComparison.OrdinalIgnoreCase))
+                    {
+                        HttpContext.Session.SetString("UserRole", "Administrador");
+                        HttpContext.Session.SetString("UserName", "Andres Admin");
+
+                        return RedirectToAction("Dashboard", "Modules");
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetString("UserRole", "Cliente");
+                        HttpContext.Session.SetString("UserName", "Juan Pasajero");
+
+                        return RedirectToAction("Index", "Vuelo");
+                    }
                 }
                 else
                 {
-                    ViewBag.Error = "Credenciales incorrectas.";
-                    return View("~/Views/Home/Login.cshtml"); // Fallo
+                    ViewBag.Error = "Credenciales incorrectas. Verifica tu correo y contraseña.";
+                    return View("~/Views/Auth/Login.cshtml");
                 }
             }
             catch (Exception ex)
             {
-                ViewBag.Error = "Error de conexión: " + ex.Message;
-                return View("~/Views/Home/Login.cshtml");
+                ViewBag.Error = "Error de conexión con la infraestructura de Oracle: " + ex.Message;
+                return View("~/Views/Auth/Login.cshtml");
             }
         }
     }
